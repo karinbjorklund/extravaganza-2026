@@ -369,28 +369,13 @@ option {
 .score-selector__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
 }
 
-.score-selector__value {
-  min-width: 48px;
-  text-align: center;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-weight: 800;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
+.score-selector__value,
 .score-selector__value--plusminus {
-  background: linear-gradient(
-    135deg,
-    rgba(220, 38, 38, 0.16),
-    rgba(245, 158, 11, 0.14),
-    rgba(22, 163, 74, 0.16)
-  );
+  display: none;
 }
 
 .score-selector {
@@ -401,6 +386,7 @@ option {
 
 .score-selector--plusminus {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .score-dot {
@@ -416,7 +402,8 @@ option {
     transform 0.16s ease,
     border-color 0.16s ease,
     box-shadow 0.16s ease,
-    opacity 0.16s ease;
+    opacity 0.16s ease,
+    background 0.16s ease;
 }
 
 .score-dot:hover {
@@ -437,9 +424,16 @@ option {
 }
 
 .score-dot--plusminus {
+  min-height: 36px;
+  border-radius: 10px;
+  font-size: 0.8rem;
   color: white;
   border: none;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.score-selector--plusminus .score-dot {
+  opacity: 0.92;
 }
 
 .score-selector--plusminus .score-dot:nth-child(1) {
@@ -463,8 +457,8 @@ option {
 }
 
 .score-selector--plusminus .score-dot:nth-child(6) {
-  background: #d4af37;
-  color: #1f1300;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .score-selector--plusminus .score-dot:nth-child(7) {
@@ -490,10 +484,13 @@ option {
 }
 
 .score-dot--plusminus.score-dot--active {
-  transform: translateY(-1px) scale(1.03);
-  box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.92),
-    0 10px 24px rgba(0, 0, 0, 0.28);
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: white;
+  border: none;
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.4);
+  z-index: 2;
+  opacity: 1;
 }
 
 .status {
@@ -953,7 +950,8 @@ option {
   }
 
   .score-selector--plusminus {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
   }
 }
 
@@ -990,6 +988,7 @@ option {
 
   .score-selector--plusminus {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
   }
 }
 
@@ -1005,6 +1004,7 @@ option {
 
   .score-selector--plusminus {
     grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: 6px;
   }
 }
 

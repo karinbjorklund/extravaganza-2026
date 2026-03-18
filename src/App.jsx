@@ -554,16 +554,9 @@ function ScoreSelector({
 
   return (
     <div className="field">
-      <div className="score-selector__header">
-        <span className="field__label">{label}</span>
-        <span
-          className={`score-selector__value ${
-            variant === "plusminus" ? "score-selector__value--plusminus" : ""
-          }`}
-        >
-          {value > 0 && variant === "plusminus" ? `+${value}` : value}
-        </span>
-      </div>
+     <div className="score-selector__header">
+  <span className="field__label">{label}</span>
+</div>
 
       <div
         className={`score-selector ${
