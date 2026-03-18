@@ -557,6 +557,77 @@ option {
   border-color: transparent;
   box-shadow: 0 8px 18px rgba(139, 92, 246, 0.26);
 }
+.live-total-card {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(217, 70, 239, 0.22);
+  background: linear-gradient(
+    135deg,
+    rgba(217, 70, 239, 0.16),
+    rgba(139, 92, 246, 0.12),
+    rgba(34, 211, 238, 0.08)
+  );
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+}
+
+.live-total-card__label {
+  display: block;
+  color: #f0abfc;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.live-total-card__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.live-total-card__parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.live-total-card__parts span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.live-total-card__value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 84px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.3);
+}
+
+@media (min-width: 640px) {
+  .live-total-card__row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .live-total-card__value {
+    justify-self: end;
+  }
+}
 
 .status {
   display: grid;

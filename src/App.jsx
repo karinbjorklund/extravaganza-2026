@@ -1636,6 +1636,19 @@ function App() {
                 variant="plusminus"
               />
             </div>
+            <div className="live-total-card">
+  <span className="live-total-card__label">Din totalpoäng</span>
+  <div className="live-total-card__row">
+    <div className="live-total-card__parts">
+      <span>Låt: {songScore}</span>
+      <span>Show: {showScore}</span>
+      <span>{plusMinus > 0 ? `+/-: +${plusMinus}` : `+/-: ${plusMinus}`}</span>
+    </div>
+    <span className="live-total-card__value">
+      {total > 0 ? `+${total}` : total}
+    </span>
+  </div>
+</div>
 
             <div className="status">
               <span
