@@ -552,32 +552,74 @@ function ScoreSelector({
   const values = [];
   for (let i = min; i <= max; i += 1) values.push(i);
 
+  if (variant === "plusminus") {
+    return (
+      <div className="field">
+        <div className="score-selector__header score-selector__header--slider">
+          <span className="field__label">{label}</span>
+          <span className="slider-value">
+            {Number(value) > 0 ? `+${value}` : value}
+          </span>
+        </div>
+
+        <div className="plusminus-slider-wrap">
+          <div className="plusminus-slider-scale">
+            <span>-5</span>
+            <span>0</span>
+            <span>+5</span>
+          </div>
+
+          <div className="plusminus-slider-track">
+            <input
+              type="range"
+              min={min}
+              max={max}
+              step="1"
+              value={value}
+              onChange={(e) => onChange(Number(e.target.value))}
+              className="plusminus-slider"
+              aria-label={label}
+            />
+          </div>
+
+          <div className="plusminus-slider-ticks">
+            {values.map((option) => (
+              <button
+                key={option}
+                type="button"
+                className={`plusminus-tick ${
+                  Number(value) === option ? "plusminus-tick--active" : ""
+                }`}
+                onClick={() => onChange(option)}
+                aria-pressed={Number(value) === option}
+              >
+                {option > 0 ? `+${option}` : option}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="field">
-     <div className="score-selector__header">
-  <span className="field__label">{label}</span>
-</div>
+      <div className="score-selector__header">
+        <span className="field__label">{label}</span>
+      </div>
 
-      <div
-        className={`score-selector ${
-          variant === "plusminus" ? "score-selector--plusminus" : ""
-        }`}
-      >
+      <div className="score-selector">
         {values.map((option) => {
           const isActive = Number(value) === option;
           return (
             <button
               key={option}
               type="button"
-              className={`score-dot ${isActive ? "score-dot--active" : ""} ${
-                variant === "plusminus" ? "score-dot--plusminus" : ""
-              }`}
+              className={`score-dot ${isActive ? "score-dot--active" : ""}`}
               onClick={() => onChange(option)}
               aria-pressed={isActive}
             >
-              <span className="score-dot__text">
-                {option > 0 && variant === "plusminus" ? `+${option}` : option}
-              </span>
+              <span className="score-dot__text">{option}</span>
             </button>
           );
         })}
