@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "./supabaseClient";
-import "./app.css";
+import "./App.css";
 
 const ROOM_CODE = "eurovision-2026";
 const STORAGE_KEY = `eurovision-local-progress-${ROOM_CODE}`;
