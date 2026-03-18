@@ -541,6 +541,58 @@ function getPlacementTotalClass(index) {
   return "";
 }
 
+function ScoreSelector({
+  label,
+  min,
+  max,
+  value,
+  onChange,
+  variant = "default",
+}) {
+  const values = [];
+  for (let i = min; i <= max; i += 1) values.push(i);
+
+  return (
+    <div className="field">
+      <div className="score-selector__header">
+        <span className="field__label">{label}</span>
+        <span
+          className={`score-selector__value ${
+            variant === "plusminus" ? "score-selector__value--plusminus" : ""
+          }`}
+        >
+          {value > 0 && variant === "plusminus" ? `+${value}` : value}
+        </span>
+      </div>
+
+      <div
+        className={`score-selector ${
+          variant === "plusminus" ? "score-selector--plusminus" : ""
+        }`}
+      >
+        {values.map((option) => {
+          const isActive = Number(value) === option;
+          return (
+            <button
+              key={option}
+              type="button"
+              className={`score-dot ${isActive ? "score-dot--active" : ""} ${
+                variant === "plusminus" ? "score-dot--plusminus" : ""
+              }`}
+              onClick={() => onChange(option)}
+              aria-pressed={isActive}
+            >
+              <span className="score-dot__text">
+                {option > 0 && variant === "plusminus" ? `+${option}` : option}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const initialState = getSavedState();
 
@@ -556,9 +608,9 @@ function App() {
     ? getVoteFromRatings(initialState.ratings, initialSongId)
     : { song: 0, show: 0, plusMinus: 0, total: 0 };
 
-  const [songScore, setSongScore] = useState(initialVote.song);
-  const [showScore, setShowScore] = useState(initialVote.show);
-  const [plusMinus, setPlusMinus] = useState(initialVote.plusMinus);
+  const [songScore, setSongScore] = useState(Number(initialVote.song));
+  const [showScore, setShowScore] = useState(Number(initialVote.show));
+  const [plusMinus, setPlusMinus] = useState(Number(initialVote.plusMinus));
 
   const [allVotes, setAllVotes] = useState([]);
   const [participants, setParticipants] = useState([]);
@@ -705,9 +757,9 @@ function App() {
   useEffect(() => {
     if (!currentSong) return;
     const savedVote = getVoteFromRatings(ratings, currentSong.id);
-    setSongScore(savedVote.song);
-    setShowScore(savedVote.show);
-    setPlusMinus(savedVote.plusMinus);
+    setSongScore(Number(savedVote.song));
+    setShowScore(Number(savedVote.show));
+    setPlusMinus(Number(savedVote.plusMinus));
   }, [currentIndex, ratings, currentSong]);
 
   useEffect(() => {
@@ -776,13 +828,13 @@ function App() {
     setLoadingBoard(true);
     setError("");
 
-    const { data, error } = await supabase
+    const { data, error: boardError } = await supabase
       .from("eurovision_votes")
       .select("*")
       .eq("room_code", ROOM_CODE);
 
-    if (error) {
-      setError(error.message);
+    if (boardError) {
+      setError(boardError.message);
       setLoadingBoard(false);
       return;
     }
@@ -792,13 +844,13 @@ function App() {
   }
 
   async function fetchParticipants() {
-    const { data, error } = await supabase
+    const { data, error: participantsError } = await supabase
       .from("eurovision_participants")
       .select("*")
       .eq("room_code", ROOM_CODE);
 
-    if (error) {
-      setError(error.message);
+    if (participantsError) {
+      setError(participantsError.message);
       return;
     }
 
@@ -808,14 +860,14 @@ function App() {
   async function fetchRoomSettings() {
     setRoomSettingsLoaded(false);
 
-    const { data, error } = await supabase
+    const { data, error: roomError } = await supabase
       .from("room_settings")
       .select("*")
       .eq("room_code", ROOM_CODE)
       .maybeSingle();
 
-    if (error) {
-      setError(error.message);
+    if (roomError) {
+      setError(roomError.message);
       setResultsRevealed(false);
       setRoomSettingsLoaded(true);
       return;
@@ -846,17 +898,19 @@ function App() {
       return true;
     }
 
-    const { error } = await supabase.from("eurovision_participants").insert({
-      room_code: ROOM_CODE,
-      participant_name: trimmedName,
-      normalized_name: normalized,
-    });
+    const { error: insertError } = await supabase
+      .from("eurovision_participants")
+      .insert({
+        room_code: ROOM_CODE,
+        participant_name: trimmedName,
+        normalized_name: normalized,
+      });
 
-    if (error) {
-      if (error.code === "23505") {
+    if (insertError) {
+      if (insertError.code === "23505") {
         setError("Det namnet används redan. Välj ett unikt namn.");
       } else {
-        setError(error.message);
+        setError(insertError.message);
       }
       return false;
     }
@@ -914,12 +968,12 @@ function App() {
       total_score: safeTotal,
     };
 
-    const { error } = await supabase
+    const { error: saveError } = await supabase
       .from("eurovision_votes")
       .upsert(voteRow, { onConflict: "room_code,participant_name,song_id" });
 
-    if (error) {
-      setError(error.message);
+    if (saveError) {
+      setError(saveError.message);
       setSavingVote(false);
       return false;
     }
@@ -974,7 +1028,7 @@ function App() {
   async function toggleReveal(nextValue) {
     if (!isModerator) return;
 
-    const { error } = await supabase.from("room_settings").upsert(
+    const { error: revealError } = await supabase.from("room_settings").upsert(
       {
         room_code: ROOM_CODE,
         results_revealed: nextValue,
@@ -983,8 +1037,8 @@ function App() {
       { onConflict: "room_code" }
     );
 
-    if (error) {
-      setError(error.message);
+    if (revealError) {
+      setError(revealError.message);
       return;
     }
 
@@ -1521,42 +1575,31 @@ function App() {
               />
             </div>
 
-            <div className="score-grid">
-              <label className="field">
-                <span className="field__label">Låt (0–5)</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="5"
-                  value={songScore}
-                  onChange={(e) => setSongScore(e.target.value)}
-                  className="input input--number"
-                />
-              </label>
+            <div className="score-grid score-grid--selectors">
+              <ScoreSelector
+                label="Låt"
+                min={0}
+                max={5}
+                value={songScore}
+                onChange={setSongScore}
+              />
 
-              <label className="field">
-                <span className="field__label">Show (0–5)</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="5"
-                  value={showScore}
-                  onChange={(e) => setShowScore(e.target.value)}
-                  className="input input--number"
-                />
-              </label>
+              <ScoreSelector
+                label="Show"
+                min={0}
+                max={5}
+                value={showScore}
+                onChange={setShowScore}
+              />
 
-              <label className="field">
-                <span className="field__label">+/- (-5 till +5)</span>
-                <input
-                  type="number"
-                  min="-5"
-                  max="5"
-                  value={plusMinus}
-                  onChange={(e) => setPlusMinus(e.target.value)}
-                  className="input input--number"
-                />
-              </label>
+              <ScoreSelector
+                label="+/-"
+                min={-5}
+                max={5}
+                value={plusMinus}
+                onChange={setPlusMinus}
+                variant="plusminus"
+              />
             </div>
 
             <div className="status">

@@ -254,11 +254,6 @@ a {
   border-color: rgba(217, 70, 239, 0.65);
 }
 
-.input--number {
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
 select {
   color: var(--text);
   background: rgba(255, 255, 255, 0.04);
@@ -357,6 +352,10 @@ option {
   margin-top: 18px;
 }
 
+.score-grid--selectors {
+  gap: 16px;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -365,6 +364,136 @@ option {
 
 .field__label {
   font-weight: 700;
+}
+
+.score-selector__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.score-selector__value {
+  min-width: 48px;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.score-selector__value--plusminus {
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.16),
+    rgba(245, 158, 11, 0.14),
+    rgba(22, 163, 74, 0.16)
+  );
+}
+
+.score-selector {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.score-selector--plusminus {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.score-dot {
+  position: relative;
+  min-height: 50px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.16s ease;
+}
+
+.score-dot:hover {
+  transform: translateY(-1px);
+  border-color: rgba(217, 70, 239, 0.38);
+}
+
+.score-dot--active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.28);
+}
+
+.score-dot__text {
+  position: relative;
+  z-index: 1;
+}
+
+.score-dot--plusminus {
+  color: white;
+  border: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.score-selector--plusminus .score-dot:nth-child(1) {
+  background: #b91c1c;
+}
+
+.score-selector--plusminus .score-dot:nth-child(2) {
+  background: #dc2626;
+}
+
+.score-selector--plusminus .score-dot:nth-child(3) {
+  background: #ea580c;
+}
+
+.score-selector--plusminus .score-dot:nth-child(4) {
+  background: #f97316;
+}
+
+.score-selector--plusminus .score-dot:nth-child(5) {
+  background: #f59e0b;
+}
+
+.score-selector--plusminus .score-dot:nth-child(6) {
+  background: #d4af37;
+  color: #1f1300;
+}
+
+.score-selector--plusminus .score-dot:nth-child(7) {
+  background: #a3c746;
+  color: #0f172a;
+}
+
+.score-selector--plusminus .score-dot:nth-child(8) {
+  background: #65c76b;
+  color: #052e16;
+}
+
+.score-selector--plusminus .score-dot:nth-child(9) {
+  background: #22c55e;
+}
+
+.score-selector--plusminus .score-dot:nth-child(10) {
+  background: #16a34a;
+}
+
+.score-selector--plusminus .score-dot:nth-child(11) {
+  background: #15803d;
+}
+
+.score-dot--plusminus.score-dot--active {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.92),
+    0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
 .status {
@@ -775,7 +904,6 @@ option {
   z-index: 1;
 }
 
-/* Extra små mobiler */
 @media (max-width: 380px) {
   .page {
     padding: 8px;
@@ -819,9 +947,16 @@ option {
   .compact-stat--total .compact-stat__value {
     font-size: 1.04rem;
   }
+
+  .score-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .score-selector--plusminus {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-/* Vanliga större mobiler */
 @media (min-width: 481px) {
   .page {
     padding: 14px;
@@ -848,9 +983,16 @@ option {
   .browser__header {
     grid-template-columns: 1fr;
   }
+
+  .score-selector {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .score-selector--plusminus {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }
 
-/* Tablet */
 @media (min-width: 640px) {
   .actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -859,6 +1001,10 @@ option {
   .status {
     grid-template-columns: auto 1fr;
     align-items: center;
+  }
+
+  .score-selector--plusminus {
+    grid-template-columns: repeat(11, minmax(0, 1fr));
   }
 }
 
@@ -911,9 +1057,12 @@ option {
   .switcher-btn {
     width: auto;
   }
+
+  .score-selector {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
 }
 
-/* Desktop */
 @media (min-width: 900px) {
   .page {
     padding: 28px;
